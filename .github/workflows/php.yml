@@ -1,0 +1,25 @@
+name: PHP CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set Up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.x' # Replace with your desired PHP version
+
+    - name: Install Composer Dependencies
+      run: composer install
+
+    - name: Run Tests
+      run: phpunit
