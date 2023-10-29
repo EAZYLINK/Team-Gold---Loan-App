@@ -7,11 +7,13 @@ list($key, $value) = explode('=', $line);
 $envVariables[$key] = $value;
 }
 // Create connection
-
+global $token;
 $servername = $envVariables['servername'];
 $database = $envVariables['database'];
 $password = $envVariables['password'];
 $username = $envVariables['username'];
+$token = $envVariables['token'];
+
 $conn = mysqli_connect($servername, $username, $password, $database);
 
 // Check connection
