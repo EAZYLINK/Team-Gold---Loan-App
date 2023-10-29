@@ -2,7 +2,7 @@
 include("inc/database.php");
 include("core/functions.php");
 $response = false;
-
+  
 /////Get authenticated users token data
 $token = $POST['token'] = 'f2454894-6aca-4ea3-93b6-75d63ce21c7b';
 $query = "SELECT * FROM token WHERE token='$token'";
