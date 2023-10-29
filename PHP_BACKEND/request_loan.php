@@ -4,7 +4,7 @@ include("core/functions.php");
 $response = false;
 
 /////Get authenticated users token data
-$token = $_GET['token'] = 'f2454894-6aca-4ea3-93b6-75d63ce21c7b';
+$token = $_GET['token'] = "";
 $query = "SELECT * FROM token WHERE token='$token'";
 $result = $conn->query($query);
 if(!empty($result->num_rows)){
