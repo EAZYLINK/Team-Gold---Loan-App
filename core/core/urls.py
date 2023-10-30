@@ -36,8 +36,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("Authentication.urls")),
-    path('api/', include("LoanApp.urls")),
-    path('api/', include("TransactionApp.urls")),
+    # path('api/', include("LoanApp.urls")),
+    # path('api/', include("TransactionApp.urls")),
 
 
     # Add the Swagger documentation URLs
