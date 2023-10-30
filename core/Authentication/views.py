@@ -79,16 +79,39 @@ class UserProfileView(APIView):
     
 
 
+# class EmailVerificationView(APIView):
+#     def get(self, request, token):
+#         try:
+#             # Verify the token and update is_verified if successful
+#             user = UserProfile.objects.get(id=token, is_verified=False).user
+#             user.userprofile.is_verified = True
+#             user.userprofile.save()
+#             return Response({'message': 'Email verification successful'}, status=status.HTTP_200_OK)
+#         except (UserProfile.DoesNotExist, ValueError):
+#             return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.http import urlsafe_base64_decode  # Corrected import
+
 class EmailVerificationView(APIView):
     def get(self, request, token):
         try:
+            # Decode the token (if it's base64-encoded)
+            try:
+                user_id = urlsafe_base64_decode(token).decode('utf-8')
+            except (TypeError, ValueError, OverflowError):
+                raise ValueError("Invalid token")
+
             # Verify the token and update is_verified if successful
-            user = UserProfile.objects.get(id=token, is_verified=False).user
-            user.userprofile.is_verified = True
-            user.userprofile.save()
+            user_profile = UserProfile.objects.get(id=user_id, is_verified=False)
+            user_profile.is_verified = True
+            user_profile.save()
             return Response({'message': 'Email verification successful'}, status=status.HTTP_200_OK)
-        except (UserProfile.DoesNotExist, ValueError):
+        except ObjectDoesNotExist:
             return Response({'error': 'Invalid or expired token'}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomLoginView(APIView):
