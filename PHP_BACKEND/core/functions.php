@@ -71,4 +71,69 @@ function balance_minus($balance, $value){
           $bal = $balance-$value;
           return $bal;
 }
+
+
+function loan_request_level($result_level, $conn){
+
+  if( $result_level < 2){
+
+    $query_loan = "SELECT * FROM loaners WHERE loan_amount < 20000";
+    $result_loan = $conn->query($query_loan);
+
+    if ($result_loan->num_rows > 0) {
+      while ($row = $result_loan->fetch_object()) {
+    // Access data from the current row
+    $response['status'] = 'Ok';
+    $response[] = $row;
+}
+} else {
+ $response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}elseif( $result_level <= 2){
+ $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 50000";
+ $result_loan = $conn->query($query_loan);
+
+ if ($result_loan->num_rows > 0) {
+   while ($row = $result_loan->fetch_object()) {
+ // Access data from the current row
+ $response['status'] = 'Ok';
+ $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}elseif( $result_level <= 3){
+ $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 100000";
+ $result_loan = $conn->query($query_loan);
+
+ if ($result_loan->num_rows > 0) {
+   while ($row = $result_loan->fetch_object()) {
+ // Access data from the current row
+ $response['status'] = 'Ok';
+ $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}elseif( $result_level <= 4){
+ $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 200000";
+ $result_loan = $conn->query($query_loan);
+
+ if ($result_loan->num_rows > 0) {
+   while ($row = $result_loan->fetch_object()) {
+ // Access data from the current row
+ $response['status'] = 'Ok';
+ $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}
+
+
+}
  ?>

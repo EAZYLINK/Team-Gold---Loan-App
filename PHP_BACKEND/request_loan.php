@@ -4,7 +4,7 @@ include("core/functions.php");
 $response = false;
 
 /////Get authenticated users token data
-$token = $_GET['token'] = "";
+$token = $_GET['token'] =  $token;
 $query = "SELECT * FROM token WHERE token='$token'";
 $result = $conn->query($query);
 if(!empty($result->num_rows)){
@@ -21,60 +21,84 @@ if(!empty($result->num_rows)){
    $result = $conn->query($query);
    if(!empty($result->num_rows)){
       $result = $result->fetch_object();
+
+      $result->level;
+      $user_id =   $result->user_id;
    }
-   $result->level;
+
+
    if( $result->level < 2){
-      $query_loan = "SELECT * FROM loaners WHERE id='2' ";
-      $result_loan = $conn->query($query_loan);
 
-     $result_loan = $result_loan->fetch_object();
-     echo "<pre>";
-var_dump($result_loan);
+     $query_loan = "SELECT * FROM loaners WHERE loan_amount < 20000";
+     $result_loan = $conn->query($query_loan);
 
-     /*$query_loan = "SELECT * FROM loaner";
-$result_loan = $conn->query($query_loan);
-
-if ($result_loan->num_rows > 0) {
-    while ($row = $result_loan->fetch_object()) {
-        // Access data from the current row
-        $id = $row->id;
-        $name = $row->name;
-        // You can access other columns in a similar way
-
-        // Do something with the data, such as displaying it
-        echo "ID: $id - Name: $name<br>";
-    }
+     if ($result_loan->num_rows > 0) {
+       while ($row = $result_loan->fetch_object()) {
+     // Access data from the current row
+     $response['status'] = 'Ok';
+     $response[] = $row;
+ }
 } else {
-    echo "No rows found in the 'users' table.";
+  $response['status'] = 400;
+ $response['message'] = "No record found.";
 }
+}elseif( $result->level <= 2){
+  $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 50000";
+  $result_loan = $conn->query($query_loan);
 
+  if ($result_loan->num_rows > 0) {
+    while ($row = $result_loan->fetch_object()) {
+  // Access data from the current row
+  $response['status'] = 'Ok';
+  $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}elseif( $result->level <= 3){
+  $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 100000";
+  $result_loan = $conn->query($query_loan);
 
+  if ($result_loan->num_rows > 0) {
+    while ($row = $result_loan->fetch_object()) {
+  // Access data from the current row
+  $response['status'] = 'Ok';
+  $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}elseif( $result->level <= 4){
+  $query_loan = "SELECT * FROM loaners WHERE loan_amount <= 200000";
+  $result_loan = $conn->query($query_loan);
 
-     echo "<pre>";
-     print_r($result_loan);
-
-    /*  if(!empty($result_loan->num_rows)){
-
-         while($result_loan = $result_loan->fetch_object()){
-           echo "<pre>";
-           //print_r($result_loan);
-           var_dump($result_loan);
-         }
-
-        //print_r($result_loan);
-         //$response['datas'] = $result_loan;
-
-      }*/
-   }
-/////Get users data ends
-  // $response['status'] = "success";
-   //$response['message'] = $data->email;
-
+  if ($result_loan->num_rows > 0) {
+    while ($row = $result_loan->fetch_object()) {
+  // Access data from the current row
+  $response['status'] = 'Ok';
+  $response[] = $row;
+}
+} else {
+$response['status'] = 400;
+$response['message'] = "No record found.";
+}
+}
 
 
    if ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
+      $id = @$_POST['id'];
+      $requestedat = $_POST['requestedat'] = date("Y-m-d H:i:s");
 
+      $update = "UPDATE loaners SET receiver_id='$user_id', status='Pending', requestedat='$requestedat' WHERE id='$id'";
+      $query = $conn->query($update);
+      if($query == True){
+        $response['status'] = "Ok";
+       $response['data'] = 'Your request submited awaiting approval';
+
+      }
 
    endif;
 
